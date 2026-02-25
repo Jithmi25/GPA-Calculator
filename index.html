@@ -445,6 +445,83 @@
             </div>
             
             <div class="result" id="result"></div>
+            
+            <!-- Final GPA Calculator Section -->
+            <div style="margin-top: 40px; padding-top: 30px; border-top: 3px solid var(--border-color);">
+                <h2 style="color: var(--primary-color); margin-bottom: 20px;">Final GPA Calculator</h2>
+                <p style="margin-bottom: 20px;">Enter your semester GPAs below. Year GPA = (Sem 1 + Sem 2) / 2<br>
+                FGPA = (0.2 × Year 1) + (0.2 × Year 2) + (0.3 × Year 3) + (0.3 × Year 4)</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                    <!-- Year 1 -->
+                    <div style="background: var(--background-color); padding: 15px; border-radius: 8px; border-left: 4px solid var(--primary-color);">
+                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">Year 1 (20%)</h3>
+                        <div class="input-group" style="margin-bottom: 10px;">
+                            <label for="sem1GPA">Semester 1:</label>
+                            <input type="number" id="sem1GPA" placeholder="0.00" min="0" max="4" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label for="sem2GPA">Semester 2:</label>
+                            <input type="number" id="sem2GPA" placeholder="0.00" min="0" max="4" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <!-- Year 2 -->
+                    <div style="background: var(--background-color); padding: 15px; border-radius: 8px; border-left: 4px solid var(--secondary-color);">
+                        <h3 style="color: var(--secondary-color); margin-bottom: 10px;">Year 2 (20%)</h3>
+                        <div class="input-group" style="margin-bottom: 10px;">
+                            <label for="sem3GPA">Semester 3:</label>
+                            <input type="number" id="sem3GPA" placeholder="0.00" min="0" max="4" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label for="sem4GPA">Semester 4:</label>
+                            <input type="number" id="sem4GPA" placeholder="0.00" min="0" max="4" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <!-- Year 3 -->
+                    <div style="background: var(--background-color); padding: 15px; border-radius: 8px; border-left: 4px solid var(--accent-color);">
+                        <h3 style="color: var(--accent-color); margin-bottom: 10px;">Year 3 (30%)</h3>
+                        <div class="input-group" style="margin-bottom: 10px;">
+                            <label for="sem5GPA">Semester 5:</label>
+                            <input type="number" id="sem5GPA" placeholder="0.00" min="0" max="4" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label for="sem6GPA">Semester 6:</label>
+                            <input type="number" id="sem6GPA" placeholder="0.00" min="0" max="4" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <!-- Year 4 -->
+                    <div style="background: var(--background-color); padding: 15px; border-radius: 8px; border-left: 4px solid var(--success-color);">
+                        <h3 style="color: var(--success-color); margin-bottom: 10px;">Year 4 (30%)</h3>
+                        <div class="input-group" style="margin-bottom: 10px;">
+                            <label for="sem7GPA">Semester 7:</label>
+                            <input type="number" id="sem7GPA" placeholder="0.00" min="0" max="4" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label for="sem8GPA">Semester 8:</label>
+                            <input type="number" id="sem8GPA" placeholder="0.00" min="0" max="4" step="0.01">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calculator-controls">
+                    <button onclick="calculateFinalGPA()">
+                        <span>🎓</span> Calculate Final GPA
+                    </button>
+                    <button class="secondary" onclick="autoPopulateFromSemesters()">
+                        <span>📚</span> Auto-Fill from Semesters
+                    </button>
+                    <button class="secondary" onclick="clearFinalGPA()">
+                        <span>🗑️</span> Clear Final GPA
+                    </button>
+                </div>
+                
+                <div class="result" id="finalGPAResult"></div>
+                
+                <div id="finalGPABreakdown" style="margin-top: 20px;"></div>
+            </div>
         </div>
 
         <!-- Semesters Tab -->
@@ -961,6 +1038,165 @@
             
             localStorage.removeItem('gpaHistory');
             displayHistory();
+        }
+        
+        // Final GPA Calculation
+        function calculateFinalGPA() {
+            // Get all semester GPAs
+            const sem1 = parseFloat(document.getElementById('sem1GPA').value);
+            const sem2 = parseFloat(document.getElementById('sem2GPA').value);
+            const sem3 = parseFloat(document.getElementById('sem3GPA').value);
+            const sem4 = parseFloat(document.getElementById('sem4GPA').value);
+            const sem5 = parseFloat(document.getElementById('sem5GPA').value);
+            const sem6 = parseFloat(document.getElementById('sem6GPA').value);
+            const sem7 = parseFloat(document.getElementById('sem7GPA').value);
+            const sem8 = parseFloat(document.getElementById('sem8GPA').value);
+            
+            // Validation
+            const semesters = [sem1, sem2, sem3, sem4, sem5, sem6, sem7, sem8];
+            const semesterNames = ['Semester 1', 'Semester 2', 'Semester 3', 'Semester 4', 'Semester 5', 'Semester 6', 'Semester 7', 'Semester 8'];
+            
+            let hasError = false;
+            for (let i = 0; i < semesters.length; i++) {
+                if (isNaN(semesters[i]) || semesters[i] < 0 || semesters[i] > 4) {
+                    alert(`Please enter a valid GPA for ${semesterNames[i]} (0.00 - 4.00)`);
+                    hasError = true;
+                    break;
+                }
+            }
+            
+            if (hasError) return;
+            
+            // Calculate Year GPAs (average of 2 semesters)
+            const year1GPA = (sem1 + sem2) / 2;
+            const year2GPA = (sem3 + sem4) / 2;
+            const year3GPA = (sem5 + sem6) / 2;
+            const year4GPA = (sem7 + sem8) / 2;
+            
+            // Calculate Final GPA using the weighted formula
+            // FGPA = (0.2 × Year 1) + (0.2 × Year 2) + (0.3 × Year 3) + (0.3 × Year 4)
+            const finalGPA = (0.2 * year1GPA) + (0.2 * year2GPA) + (0.3 * year3GPA) + (0.3 * year4GPA);
+            
+            // Display result
+            const resultElement = document.getElementById('finalGPAResult');
+            resultElement.innerHTML = `
+                <h3>Final GPA: ${finalGPA.toFixed(2)}</h3>
+                <p style="font-size: 0.9rem; margin-top: 10px;">
+                    ${finalGPA >= 3.5 ? 'Excellent! 🎉' : finalGPA >= 3.0 ? 'Good Work! 👍' : finalGPA >= 2.5 ? 'Keep Going! 💪' : 'Stay Strong! 📚'}
+                </p>
+            `;
+            resultElement.style.color = finalGPA >= 2.0 ? 'var(--success-color)' : 'var(--warning-color)';
+            
+            // Display breakdown
+            const breakdownElement = document.getElementById('finalGPABreakdown');
+            breakdownElement.innerHTML = `
+                <div style="background: var(--background-color); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow-color);">
+                    <h3 style="margin-bottom: 15px; color: var(--primary-color);">Calculation Breakdown:</h3>
+                    <div style="display: grid; gap: 10px;">
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--surface-color); border-radius: 4px;">
+                            <span>Year 1 GPA:</span>
+                            <span><strong>(${sem1.toFixed(2)} + ${sem2.toFixed(2)}) / 2 = ${year1GPA.toFixed(2)}</strong></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--surface-color); border-radius: 4px;">
+                            <span>Year 1 Contribution (20%):</span>
+                            <span><strong>${year1GPA.toFixed(2)} × 0.2 = ${(year1GPA * 0.2).toFixed(2)}</strong></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--surface-color); border-radius: 4px;">
+                            <span>Year 2 GPA:</span>
+                            <span><strong>(${sem3.toFixed(2)} + ${sem4.toFixed(2)}) / 2 = ${year2GPA.toFixed(2)}</strong></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--surface-color); border-radius: 4px;">
+                            <span>Year 2 Contribution (20%):</span>
+                            <span><strong>${year2GPA.toFixed(2)} × 0.2 = ${(year2GPA * 0.2).toFixed(2)}</strong></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--surface-color); border-radius: 4px;">
+                            <span>Year 3 GPA:</span>
+                            <span><strong>(${sem5.toFixed(2)} + ${sem6.toFixed(2)}) / 2 = ${year3GPA.toFixed(2)}</strong></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--surface-color); border-radius: 4px;">
+                            <span>Year 3 Contribution (30%):</span>
+                            <span><strong>${year3GPA.toFixed(2)} × 0.3 = ${(year3GPA * 0.3).toFixed(2)}</strong></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--surface-color); border-radius: 4px;">
+                            <span>Year 4 GPA:</span>
+                            <span><strong>(${sem7.toFixed(2)} + ${sem8.toFixed(2)}) / 2 = ${year4GPA.toFixed(2)}</strong></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--surface-color); border-radius: 4px;">
+                            <span>Year 4 Contribution (30%):</span>
+                            <span><strong>${year4GPA.toFixed(2)} × 0.3 = ${(year4GPA * 0.3).toFixed(2)}</strong></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 12px; background: var(--primary-color); color: white; border-radius: 4px; font-size: 1.1rem; margin-top: 5px;">
+                            <span><strong>Final GPA:</strong></span>
+                            <span><strong>${finalGPA.toFixed(2)}</strong></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Save to localStorage
+            const finalGPAData = {
+                semesters: semesters,
+                yearGPAs: [year1GPA, year2GPA, year3GPA, year4GPA],
+                finalGPA: finalGPA,
+                date: new Date().toISOString()
+            };
+            
+            localStorage.setItem('lastFinalGPA', JSON.stringify(finalGPAData));
+        }
+        
+        function autoPopulateFromSemesters() {
+            const savedSemesters = JSON.parse(localStorage.getItem('savedSemesters') || '[]');
+            
+            if (savedSemesters.length === 0) {
+                alert('No saved semesters found. Please save semesters first.');
+                return;
+            }
+            
+            // Group semesters by semester number (1-8)
+            const semesterGPAs = Array(8).fill(null);
+            
+            savedSemesters.forEach(semester => {
+                const name = semester.name.toLowerCase();
+                
+                // Try to detect semester number from semester name
+                for (let i = 1; i <= 8; i++) {
+                    if (name.includes(`semester ${i}`) || name.includes(`sem ${i}`) || name.includes(`s${i}`)) {
+                        semesterGPAs[i - 1] = semester.gpa;
+                        break;
+                    }
+                }
+            });
+            
+            // Check if any semesters were found
+            if (semesterGPAs.every(gpa => gpa === null)) {
+                alert('Could not auto-detect semester numbers from semester names. Please ensure semester names include "Semester 1", "Semester 2", etc.');
+                return;
+            }
+            
+            // Populate the fields
+            if (semesterGPAs[0] !== null) document.getElementById('sem1GPA').value = semesterGPAs[0].toFixed(2);
+            if (semesterGPAs[1] !== null) document.getElementById('sem2GPA').value = semesterGPAs[1].toFixed(2);
+            if (semesterGPAs[2] !== null) document.getElementById('sem3GPA').value = semesterGPAs[2].toFixed(2);
+            if (semesterGPAs[3] !== null) document.getElementById('sem4GPA').value = semesterGPAs[3].toFixed(2);
+            if (semesterGPAs[4] !== null) document.getElementById('sem5GPA').value = semesterGPAs[4].toFixed(2);
+            if (semesterGPAs[5] !== null) document.getElementById('sem6GPA').value = semesterGPAs[5].toFixed(2);
+            if (semesterGPAs[6] !== null) document.getElementById('sem7GPA').value = semesterGPAs[6].toFixed(2);
+            if (semesterGPAs[7] !== null) document.getElementById('sem8GPA').value = semesterGPAs[7].toFixed(2);
+            
+            alert('Semester GPAs have been auto-populated from saved semesters!');
+        }
+        
+        function clearFinalGPA() {
+            document.getElementById('sem1GPA').value = '';
+            document.getElementById('sem2GPA').value = '';
+            document.getElementById('sem3GPA').value = '';
+            document.getElementById('sem4GPA').value = '';
+            document.getElementById('sem5GPA').value = '';
+            document.getElementById('sem6GPA').value = '';
+            document.getElementById('sem7GPA').value = '';
+            document.getElementById('sem8GPA').value = '';
+            document.getElementById('finalGPAResult').innerHTML = '';
+            document.getElementById('finalGPABreakdown').innerHTML = '';
         }
         
         // Initialize

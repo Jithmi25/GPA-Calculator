@@ -15,4 +15,3 @@ dist/
 
 package-lock.json
 VERCEL_DEPLOYMENT.md
-firebase-config.js

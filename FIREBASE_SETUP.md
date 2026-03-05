@@ -84,34 +84,29 @@ Your database needs security rules to protect user data:
 
 ## Step 6: Update the Application
 
-1. Open `index.html` in a text editor
-2. Find these lines near the top of the `<script>` section:
+1. Copy `firebase-config.example.js` to `firebase-config.js`:
+
+   ```bash
+   cp firebase-config.example.js firebase-config.js
+   ```
+
+2. Open `firebase-config.js` in a text editor
+
+3. Replace the placeholder values with your Firebase configuration:
 
 ```javascript
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
-};
-```
-
-3. Replace each `YOUR_*` value with the corresponding value from your Firebase config object
-
-Example:
-
-```javascript
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyC...",
   authDomain: "gpa-calculator.firebaseapp.com",
   projectId: "gpa-calculator-123",
   storageBucket: "gpa-calculator-123.appspot.com",
   messagingSenderId: "12356789",
   appId: "1:123456789:web:abcde23456",
+  databaseURL: "https://gpa-calculator-123-default-rtdb.firebaseio.com",
 };
 ```
+
+**Note:** The `firebase-config.js` file is gitignored for cleaner repository management. Firebase web API keys are safe to be public - security is enforced through Firebase Security Rules, not by hiding the API key. See `SECURITY.md` for more details.
 
 ## Step 7: Test the Setup
 

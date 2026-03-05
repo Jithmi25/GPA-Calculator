@@ -79,6 +79,29 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
+## 🔒 Security
+
+### Firebase API Key Configuration
+
+Firebase configuration is managed through `firebase-config.js`:
+
+```bash
+# Copy the example configuration
+cp firebase-config.example.js firebase-config.js
+
+# Edit firebase-config.js with your Firebase credentials
+```
+
+**Important Note:** Firebase web API keys are **public by design** and safe to expose in client-side code. Security is enforced through:
+
+- ✅ Firebase Security Rules (see `database.rules.json`)
+- ✅ User authentication requirements
+- ✅ Domain restrictions in Firebase Console
+
+The `firebase-config.js` file is gitignored for cleaner repository management, not for security reasons. See [SECURITY.md](SECURITY.md) for detailed security information.
+
+---
+
 ## 📖 Setup Guide
 
 ### Firebase Configuration

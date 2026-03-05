@@ -1,5 +1,47 @@
 # Support & Security Guidelines
 
+## 🔐 Firebase API Key Security
+
+### Important: Firebase Web API Keys Are Public By Design
+
+The Firebase API key for web applications is **not a secret** and is designed to be included in client-side code. Firebase security comes from:
+
+1. **Firebase Security Rules** - Control who can read/write data (see `database.rules.json`)
+2. **Authentication** - Users must be authenticated to access data
+3. **Domain Restrictions** - Restrict which domains can use your Firebase project
+
+### Why This Is Secure
+
+- The API key only identifies your Firebase project
+- Firebase Security Rules prevent unauthorized data access
+- Even with the API key, users cannot bypass authentication/authorization
+
+### Configuration Management
+
+Configuration is now in `firebase-config.js` (gitignored):
+
+```javascript
+export const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  // ... other config
+};
+```
+
+**Important:** `firebase-config.js` is gitignored. Use `firebase-config.example.js` as a template.
+
+### Best Security Practices
+
+1. ✅ Ensure Firebase Security Rules are properly configured
+2. ✅ Enable domain restrictions in Firebase Console
+3. ✅ Monitor Firebase usage regularly
+4. ✅ Use Firebase App Check for abuse protection
+5. ❌ Don't commit admin SDK credentials (those ARE secret!)
+
+**Reference:** [Firebase Security Best Practices](https://firebase.google.com/docs/rules/basics)
+
+---
+
 ## 🆘 Getting Help
 
 ### For Usage Questions

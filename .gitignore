@@ -1,9 +1,8 @@
-# Environment variables
+# Environment variables (contains sensitive keys)
 .env
 .env.local
-
-# Firebase configuration (contains sensitive keys)
-firebase-config.js
+.env.production
+.env.example
 
 # Dependencies
 node_modules/
@@ -15,3 +14,4 @@ dist/
 *.log
 
 package-lock.json
+VERCEL_DEPLOYMENT.md

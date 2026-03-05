@@ -18,17 +18,21 @@ The Firebase API key for web applications is **not a secret** and is designed to
 
 ### Configuration Management
 
-Configuration is now in `firebase-config.js` (gitignored):
+Firebase credentials are managed through environment variables in `.env` file:
 
-```javascript
-export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  // ... other config
-};
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_domain
+# ... other config
 ```
 
-**Important:** `firebase-config.js` is gitignored. Use `firebase-config.example.js` as a template.
+The `firebase-config.js` file reads from these environment variables at build time using Vite's `import.meta.env`.
+
+**Important:**
+
+- `.env` file is gitignored (contains your actual credentials)
+- Use `.env.example` as a template for setting up local development
+- For production (Vercel, Netlify, etc.), set environment variables in the platform dashboard
 
 ### Best Security Practices
 

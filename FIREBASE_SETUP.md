@@ -82,31 +82,30 @@ Your database needs security rules to protect user data:
 5. Toggle **Enable** ON
 6. Click **Save**
 
-## Step 6: Update the Application
+## Step 6: Configure Environment Variables
 
-1. Copy `firebase-config.example.js` to `firebase-config.js`:
+1. Copy the example environment file:
 
    ```bash
-   cp firebase-config.example.js firebase-config.js
+   cp .env.example .env
    ```
 
-2. Open `firebase-config.js` in a text editor
+2. Open `.env` in a text editor
 
 3. Replace the placeholder values with your Firebase configuration:
 
-```javascript
-export const firebaseConfig = {
-  apiKey: "AIzaSyC...",
-  authDomain: "gpa-calculator.firebaseapp.com",
-  projectId: "gpa-calculator-123",
-  storageBucket: "gpa-calculator-123.appspot.com",
-  messagingSenderId: "12356789",
-  appId: "1:123456789:web:abcde23456",
-  databaseURL: "https://gpa-calculator-123-default-rtdb.firebaseio.com",
-};
-```
+   ```env
+   VITE_FIREBASE_API_KEY=AIzaSyC...
+   VITE_FIREBASE_AUTH_DOMAIN=gpa-calculator.firebaseapp.com
+   VITE_FIREBASE_PROJECT_ID=gpa-calculator-123
+   VITE_FIREBASE_STORAGE_BUCKET=gpa-calculator-123.firebasestorage.app
+   VITE_FIREBASE_MESSAGING_SENDER_ID=12356789
+   VITE_FIREBASE_APP_ID=1:123456789:web:abcde23456
+   VITE_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXX
+   VITE_FIREBASE_DATABASE_URL=https://gpa-calculator-123-default-rtdb.firebaseio.com
+   ```
 
-**Note:** The `firebase-config.js` file is gitignored for cleaner repository management. Firebase web API keys are safe to be public - security is enforced through Firebase Security Rules, not by hiding the API key. See `SECURITY.md` for more details.
+**Note:** The `.env` file is gitignored. The `firebase-config.js` reads from these environment variables. Firebase web API keys are safe to be public - security is enforced through Firebase Security Rules. See `SECURITY.md` for details.
 
 ## Step 7: Test the Setup
 

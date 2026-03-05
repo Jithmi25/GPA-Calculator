@@ -79,26 +79,48 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
-## 🔒 Security
+## 🔒 Security & Configuration
 
-### Firebase API Key Configuration
+### Environment Variables
 
-Firebase configuration is managed through `firebase-config.js`:
+Firebase credentials are managed through environment variables using Vite:
 
 ```bash
-# Copy the example configuration
-cp firebase-config.example.js firebase-config.js
+# 1. Copy the example file
+cp .env.example .env
 
-# Edit firebase-config.js with your Firebase credentials
+# 2. Edit .env and add your Firebase credentials
+# Get them from: https://console.firebase.google.com/ → Project Settings
 ```
 
-**Important Note:** Firebase web API keys are **public by design** and safe to expose in client-side code. Security is enforced through:
+Your `.env` file should contain:
+
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
+VITE_FIREBASE_DATABASE_URL=https://your-project.firebaseio.com
+```
+
+**Important Note:** Firebase web API keys are **public by design** and safe to expose. Security is enforced through:
 
 - ✅ Firebase Security Rules (see `database.rules.json`)
 - ✅ User authentication requirements
 - ✅ Domain restrictions in Firebase Console
 
-The `firebase-config.js` file is gitignored for cleaner repository management, not for security reasons. See [SECURITY.md](SECURITY.md) for detailed security information.
+See [SECURITY.md](SECURITY.md) for detailed security information.
+
+### Deployment
+
+For production deployment to Vercel, Netlify, or other platforms:
+
+1. Set environment variables in your hosting platform dashboard
+2. All `VITE_FIREBASE_*` variables must be configured
+3. See [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md) for detailed Vercel instructions
 
 ---
 

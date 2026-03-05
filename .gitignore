@@ -14,4 +14,3 @@ dist/
 *.log
 
 package-lock.json
-VERCEL_DEPLOYMENT.md

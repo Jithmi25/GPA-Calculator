@@ -1679,6 +1679,9 @@
                 <p style="font-size: 0.9rem; margin-top: 10px;">
                     ${finalGPA >= 3.5 ? 'Excellent! 🎉' : finalGPA >= 3.0 ? 'Good Work! 👍' : finalGPA >= 2.5 ? 'Keep Going! 💪' : 'Stay Strong! 📚'}
                 </p>
+                <button class="secondary" onclick="downloadFinalGPA()" style="margin: 14px auto 0 auto;">
+                    <span>📥</span> Download Final GPA
+                </button>
             `;
             resultElement.style.color = finalGPA >= 2.0 ? 'var(--success-color)' : 'var(--warning-color)';
             
@@ -1744,6 +1747,24 @@
             
             localStorage.setItem('lastFinalGPA', JSON.stringify(finalGPAData));
         }
+
+        function downloadFinalGPA() {
+            const lastFinalGPA = localStorage.getItem('lastFinalGPA');
+
+            if (!lastFinalGPA) {
+                alert('No final GPA calculation found. Please calculate Final GPA first.');
+                return;
+            }
+
+            const parsedData = JSON.parse(lastFinalGPA);
+            const dataBlob = new Blob([JSON.stringify(parsedData, null, 2)], { type: 'application/json' });
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `Final_GPA_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
         
         function autoPopulateFromSemesters() {
             const savedSemesters = JSON.parse(localStorage.getItem('savedSemesters') || '[]');
@@ -1806,6 +1827,7 @@
             document.getElementById('sem8Credits').value = '1';
             document.getElementById('finalGPAResult').innerHTML = '';
             document.getElementById('finalGPABreakdown').innerHTML = '';
+            localStorage.removeItem('lastFinalGPA');
         }
         
         // Search and Filter Semesters
@@ -2278,6 +2300,7 @@
         window.saveSemester = saveSemester;
         window.clearCourses = clearCourses;
         window.calculateFinalGPA = calculateFinalGPA;
+        window.downloadFinalGPA = downloadFinalGPA;
         window.clearFinalGPA = clearFinalGPA;
         window.autoPopulateFromSemesters = autoPopulateFromSemesters;
         window.printSemesters = printSemesters;

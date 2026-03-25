@@ -1680,7 +1680,7 @@
                     ${finalGPA >= 3.5 ? 'Excellent! 🎉' : finalGPA >= 3.0 ? 'Good Work! 👍' : finalGPA >= 2.5 ? 'Keep Going! 💪' : 'Stay Strong! 📚'}
                 </p>
                 <button class="secondary" onclick="downloadFinalGPA()" style="margin: 14px auto 0 auto;">
-                    <span>📥</span> Download Final GPA
+                    <span>📄</span> Download Final GPA PDF
                 </button>
             `;
             resultElement.style.color = finalGPA >= 2.0 ? 'var(--success-color)' : 'var(--warning-color)';
@@ -1748,7 +1748,7 @@
             localStorage.setItem('lastFinalGPA', JSON.stringify(finalGPAData));
         }
 
-        function downloadFinalGPA() {
+        async function downloadFinalGPA() {
             const lastFinalGPA = localStorage.getItem('lastFinalGPA');
 
             if (!lastFinalGPA) {
@@ -1756,14 +1756,81 @@
                 return;
             }
 
-            const parsedData = JSON.parse(lastFinalGPA);
-            const dataBlob = new Blob([JSON.stringify(parsedData, null, 2)], { type: 'application/json' });
+            try {
+                if (!window.jspdf || !window.jspdf.jsPDF) {
+                    await new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                }
 
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(dataBlob);
-            link.download = `Final_GPA_${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-            URL.revokeObjectURL(link.href);
+                if (!window.jspdf || !window.jspdf.jsPDF) {
+                    alert('Unable to load PDF generator. Please check your internet connection and try again.');
+                    return;
+                }
+
+                const parsedData = JSON.parse(lastFinalGPA);
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+
+                const generatedDate = new Date(parsedData.date || Date.now());
+                const dateText = `${generatedDate.toLocaleDateString()} ${generatedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+                let y = 60;
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(18);
+                doc.text('Final GPA Report', 40, y);
+
+                y += 30;
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(12);
+                doc.text(`Generated: ${dateText}`, 40, y);
+
+                y += 30;
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(14);
+                doc.text(`Final GPA: ${Number(parsedData.finalGPA).toFixed(2)}`, 40, y);
+
+                y += 24;
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(12);
+                doc.text(`Class Award: ${parsedData.classAward}`, 40, y);
+
+                y += 30;
+                doc.setFont('helvetica', 'bold');
+                doc.text('Year GPAs', 40, y);
+
+                y += 22;
+                doc.setFont('helvetica', 'normal');
+                (parsedData.yearGPAs || []).forEach((yearGPA, index) => {
+                    doc.text(`Year ${index + 1}: ${Number(yearGPA).toFixed(2)}`, 60, y);
+                    y += 20;
+                });
+
+                y += 10;
+                doc.setFont('helvetica', 'bold');
+                doc.text('Semester GPAs and Credits', 40, y);
+
+                y += 22;
+                doc.setFont('helvetica', 'normal');
+                (parsedData.semesters || []).forEach((semesterGPA, index) => {
+                    const credit = (parsedData.semesterCredits || [])[index];
+                    doc.text(`Semester ${index + 1}: GPA ${Number(semesterGPA).toFixed(2)} | Credits ${credit}`, 60, y);
+                    y += 20;
+                    if (y > 780) {
+                        doc.addPage();
+                        y = 60;
+                    }
+                });
+
+                doc.save(`Final_GPA_${new Date().toISOString().split('T')[0]}.pdf`);
+            } catch (error) {
+                console.error('Error generating Final GPA PDF:', error);
+                alert('Could not generate PDF. Please try again.');
+            }
         }
         
         function autoPopulateFromSemesters() {
